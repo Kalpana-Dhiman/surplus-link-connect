@@ -2,7 +2,11 @@ import { ArrowRight, Heart, Leaf, Users, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-export const HeroSection = () => {
+interface HeroSectionProps {
+  onTabChange: (tab: string) => void;
+}
+
+export const HeroSection = ({ onTabChange }: HeroSectionProps) => {
   return (
     <section className="relative overflow-hidden">
       {/* Background Effects */}
@@ -39,6 +43,7 @@ export const HeroSection = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up delay-200">
             <Button 
               size="lg" 
+              onClick={() => onTabChange('donate')}
               className="bg-gradient-primary text-white hover:opacity-90 shadow-lg hover:shadow-xl transition-all duration-200 group"
             >
               <Heart className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -48,6 +53,7 @@ export const HeroSection = () => {
             <Button 
               variant="outline" 
               size="lg"
+              onClick={() => onTabChange('discover')}
               className="border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-colors"
             >
               Discover Surplus

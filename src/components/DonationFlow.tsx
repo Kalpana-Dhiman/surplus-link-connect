@@ -3,7 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-export const DonationFlow = () => {
+interface DonationFlowProps {
+  onTabChange?: (tab: string) => void;
+}
+
+export const DonationFlow = ({ onTabChange }: DonationFlowProps) => {
   return (
     <section className="py-20 lg:py-32 bg-gradient-subtle">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,7 +107,11 @@ export const DonationFlow = () => {
 
           {/* CTA */}
           <div className="text-center mt-12 animate-slide-up delay-300">
-            <Button size="lg" className="bg-gradient-primary text-white hover:opacity-90 transition-opacity">
+            <Button 
+              size="lg" 
+              onClick={() => onTabChange?.('donate')}
+              className="bg-gradient-primary text-white hover:opacity-90 transition-opacity"
+            >
               <Camera className="mr-2 h-5 w-5" />
               Start Your First Donation
             </Button>

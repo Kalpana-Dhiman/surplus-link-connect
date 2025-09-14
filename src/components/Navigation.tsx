@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Home, Heart, Map, TrendingUp, Settings, Menu, X } from "lucide-react";
+import { Home, Heart, Map, TrendingUp, Settings, Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { AuthDialog } from "@/components/AuthDialog";
+import { useAuth } from "@/components/MockAuth";
 import { cn } from "@/lib/utils";
 
 interface NavigationProps {
@@ -19,6 +21,8 @@ const navItems = [
 
 export const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
@@ -60,12 +64,35 @@ export const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
           {/* Desktop Right Section */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            <Button variant="outline" className="border-primary/20 hover:border-primary/40">
-              Sign In
-            </Button>
-            <Button className="bg-gradient-primary text-white hover:opacity-90 transition-opacity">
-              Get Started
-            </Button>
+            {user ? (
+              <>
+                <span className="text-sm text-muted-foreground">Welcome, {user.name}!</span>
+                <Button 
+                  variant="outline" 
+                  onClick={signOut}
+                  className="border-primary/20 hover:border-primary/40"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setAuthDialogOpen(true)}
+                  className="border-primary/20 hover:border-primary/40"
+                >
+                  Sign In
+                </Button>
+                <Button 
+                  onClick={() => setAuthDialogOpen(true)}
+                  className="bg-gradient-primary text-white hover:opacity-90 transition-opacity"
+                >
+                  Get Started
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -109,16 +136,50 @@ export const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
               );
             })}
             <div className="pt-4 flex flex-col space-y-2">
-              <Button variant="outline" className="w-full border-primary/20 hover:border-primary/40">
-                Sign In
-              </Button>
-              <Button className="w-full bg-gradient-primary text-white hover:opacity-90">
-                Get Started
-              </Button>
+              {user ? (
+                <>
+                  <div className="text-center py-2">
+                    <span className="text-sm text-muted-foreground">Welcome, {user.name}!</span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    onClick={signOut}
+                    className="w-full border-primary/20 hover:border-primary/40"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      setAuthDialogOpen(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full border-primary/20 hover:border-primary/40"
+                  >
+                    Sign In
+                  </Button>
+                  <Button 
+                    onClick={() => {
+                      setAuthDialogOpen(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full bg-gradient-primary text-white hover:opacity-90"
+                  >
+                    Get Started
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
       )}
+
+      {/* Auth Dialog */}
+      <AuthDialog open={authDialogOpen} onClose={() => setAuthDialogOpen(false)} />
     </nav>
   );
 };
